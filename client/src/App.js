@@ -1,3 +1,4 @@
+// App.js
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import axios from "axios";
@@ -5,6 +6,8 @@ import Header from "./components/Header";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskFilter from "./components/TaskFilter";
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -16,7 +19,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/tasks");
+      const response = await axios.get(`${API_URL}/api/tasks`);
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -25,7 +28,7 @@ function App() {
 
   const addTask = async (taskText) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/tasks", {
+      const response = await axios.post(`${API_URL}/api/tasks`, {
         text: taskText,
       });
       setTasks([...tasks, response.data]);
@@ -37,7 +40,7 @@ function App() {
   const toggleTaskStatus = async (taskId, completed) => {
     try {
       const newCompleted = !completed;
-      await axios.put(`http://localhost:5000/api/tasks/${taskId}`, {
+      await axios.put(`${API_URL}/api/tasks/${taskId}`, {
         completed: newCompleted,
       });
       const updatedTasks = tasks.map((task) =>
@@ -51,7 +54,7 @@ function App() {
 
   const deleteTask = async (taskId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
+      await axios.delete(`${API_URL}/api/tasks/${taskId}`);
       const updatedTasks = tasks.filter((task) => task._id !== taskId);
       setTasks(updatedTasks);
     } catch (error) {
@@ -61,7 +64,7 @@ function App() {
 
   const editTask = async (taskId, newText) => {
     try {
-      await axios.put(`http://localhost:5000/api/tasks/${taskId}`, {
+      await axios.put(`${API_URL}/api/tasks/${taskId}`, {
         text: newText,
       });
       const updatedTasks = tasks.map((task) =>
