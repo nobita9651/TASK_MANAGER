@@ -7,7 +7,7 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskFilter from "./components/TaskFilter";
 
-const API_URL = process.env.REACT_APP_API_URL || "https://task-manager-wxnk.onrender.com/";
+const defaultAPIURL = "https://your-render-app.render.com"; // Replace with your actual Render backend URL
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -19,7 +19,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/tasks`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL || defaultAPIURL}/api/tasks`);
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -28,7 +28,7 @@ function App() {
 
   const addTask = async (taskText) => {
     try {
-      const response = await axios.post(`${API_URL}/api/tasks`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || defaultAPIURL}/api/tasks`, {
         text: taskText,
       });
       setTasks([...tasks, response.data]);
@@ -40,7 +40,7 @@ function App() {
   const toggleTaskStatus = async (taskId, completed) => {
     try {
       const newCompleted = !completed;
-      await axios.put(`${API_URL}/api/tasks/${taskId}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL || defaultAPIURL}/api/tasks/${taskId}`, {
         completed: newCompleted,
       });
       const updatedTasks = tasks.map((task) =>
@@ -54,7 +54,7 @@ function App() {
 
   const deleteTask = async (taskId) => {
     try {
-      await axios.delete(`${API_URL}/api/tasks/${taskId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL || defaultAPIURL}/api/tasks/${taskId}`);
       const updatedTasks = tasks.filter((task) => task._id !== taskId);
       setTasks(updatedTasks);
     } catch (error) {
@@ -64,7 +64,7 @@ function App() {
 
   const editTask = async (taskId, newText) => {
     try {
-      await axios.put(`${API_URL}/api/tasks/${taskId}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL || defaultAPIURL}/api/tasks/${taskId}`, {
         text: newText,
       });
       const updatedTasks = tasks.map((task) =>
