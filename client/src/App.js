@@ -7,7 +7,7 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskFilter from "./components/TaskFilter";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "https://task-manager-wxnk.onrender.com/";
 
 function App() {
   const [tasks, setTasks] = useState([]);
