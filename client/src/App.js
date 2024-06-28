@@ -7,7 +7,7 @@ import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import TaskFilter from "./components/TaskFilter";
 
-const defaultAPIURL = "https://task-manager-wxnk.onrender.com/"; // Replace with your actual Render backend URL
+const defaultAPIURL = "https://task-manager-wxnk.onrender.com"; // Replace with your actual Render backend URL
 
 function App() {
   const [tasks, setTasks] = useState([]);
