@@ -1,11 +1,11 @@
+// index.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const { MongoClient, ObjectId } = require("mongodb");
-
-require("dotenv").config();
+require("dotenv").config();  // Ensure environment variables are loaded
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;  // Set port from environment variable or default to 5000
 const mongoURI = process.env.MONGO_URI;
 
 app.use(bodyParser.json());
@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 
 async function connectToMongoDB() {
   try {
-    const client = new MongoClient(mongoURI);
+    const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
     console.log("Connected to MongoDB");
 
@@ -42,12 +42,8 @@ async function connectToMongoDB() {
           res.status(400).json({ error: "Task text is required" });
           return;
         }
-        const result = await db
-          .collection("tasks")
-          .insertOne({ text, completed: false });
-        const insertedTask = await db
-          .collection("tasks")
-          .findOne({ _id: result.insertedId });
+        const result = await db.collection("tasks").insertOne({ text, completed: false });
+        const insertedTask = await db.collection("tasks").findOne({ _id: result.insertedId });
         res.json(insertedTask);
       } catch (error) {
         console.error("Error adding task:", error);
@@ -62,13 +58,11 @@ async function connectToMongoDB() {
         const updateFields = {};
         if (completed !== undefined) updateFields.completed = completed;
         if (text) updateFields.text = text;
-        const result = await db
-          .collection("tasks")
-          .findOneAndUpdate(
-            { _id: new ObjectId(taskId) },
-            { $set: updateFields },
-            { returnOriginal: false }
-          );
+        const result = await db.collection("tasks").findOneAndUpdate(
+          { _id: new ObjectId(taskId) },
+          { $set: updateFields },
+          { returnOriginal: false }
+        );
         res.json(result.value);
       } catch (error) {
         console.error("Error updating task:", error);
@@ -79,9 +73,7 @@ async function connectToMongoDB() {
     app.delete("/api/tasks/:id", async (req, res) => {
       const taskId = req.params.id;
       try {
-        const result = await db
-          .collection("tasks")
-          .deleteOne({ _id: new ObjectId(taskId) });
+        const result = await db.collection("tasks").deleteOne({ _id: new ObjectId(taskId) });
         if (result.deletedCount === 1) {
           res.json({ id: taskId });
         } else {
